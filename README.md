@@ -34,16 +34,17 @@ agent so it starts with your Mac. Re-run the same script to update.
 ## First run
 
 Look for the circled Wi-Fi icon in the menu bar — that's how you tell it apart
-from macOS's own. Open it, choose **Enable nearby Wi-Fi scanning…**, and allow
-Location access. macOS requires Location permission before any app can read
-nearby SSIDs; the app never uses your position for anything else. Notifications
-are optional.
+from macOS's own. Open it, choose **Settings → Enable nearby Wi-Fi scanning…**,
+and allow Location access. macOS requires Location permission before any app
+can read nearby SSIDs; the app never uses your position for anything else.
+Notifications are optional.
 
 ## The menu
 
-Current network and last check status, **Find better Wi-Fi now**, **Refresh
-nearby networks**, and the nearby known networks with their priority. Toggles,
-the full saved-network history, and the log live under **Settings**.
+Current network, last status, **Find better Wi-Fi now**, and the nearby known
+networks with their priority. Opening the menu rescans on its own, so the list
+is current every time you look at it — there is no refresh button to press.
+Toggles, the full saved-network history, and the log live under **Settings**.
 
 Every three minutes the app pings the current connection to judge its health,
 scans for nearby networks without disconnecting, ranks the candidates by
