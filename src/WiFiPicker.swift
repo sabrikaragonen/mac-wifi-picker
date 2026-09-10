@@ -69,8 +69,9 @@ struct CheckOutcome {
     let switchedTo: String?
 }
 
-final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDelegate, NSMenuDelegate {
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    private let menu = NSMenu()
     private let fileManager = FileManager.default
     private let wifiClient = CWWiFiClient.shared()
     private let locationManager = CLLocationManager()
@@ -78,13 +79,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
 
     private var config = Config()
     private var wifiDevice = "en0"
-    private var refreshTimer: Timer?
     private var checkTimer: Timer?
     private var isChecking = false
+    private var isScanning = false
     private var lastStatus = "Ready"
     private var cachedVisibleNetworks: [VisibleNetwork] = []
     private var cachedSavedSSIDs: [String] = []
     private var lastSavedRefresh = Date.distantPast
+    private var lastNearbyScan = Date.distantPast
 
     // These values intentionally live in memory. Restarting the app clears a stale
     // cooldown or pending candidate instead of trapping the user on a bad network.
@@ -98,6 +100,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
     private let minimumUsableRSSI = -78
     private let sameTierRSSIGain = 12
     private let connectTimeout: TimeInterval = 10
+    // ponytail: fixed throttle so reopening the menu in quick succession does not
+    // re-scan the radio every time; make it configurable only if anyone asks.
+    private let nearbyScanThrottle: TimeInterval = 10
 
     private var home: String { NSHomeDirectory() }
     private var applicationSupportDirectory: URL {
@@ -120,15 +125,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
         statusItem.button?.image = NSImage(systemSymbolName: "wifi.circle",
                                            accessibilityDescription: "Wi-Fi Picker")
         statusItem.button?.toolTip = "Wi-Fi Picker"
+        menu.delegate = self
+        statusItem.menu = menu
         rebuildMenu()
         if locationManager.authorizationStatus == .authorized ||
             locationManager.authorizationStatus == .authorizedAlways {
             DispatchQueue.main.async { [weak self] in self?.refreshNearbyNetworks() }
         }
 
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
-            self?.rebuildMenu()
-        }
         checkTimer = Timer.scheduledTimer(withTimeInterval: checkInterval, repeats: true) { [weak self] _ in
             self?.startCheck(reason: .automatic)
         }
@@ -384,7 +388,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
     }
 
     private func refreshNearbyNetworks() {
-        guard !isChecking else { return }
+        guard !isChecking, !isScanning else { return }
         let authorization = locationManager.authorizationStatus
         guard authorization == .authorized || authorization == .authorizedAlways else {
             lastStatus = "Allow Location access to scan nearby Wi-Fi"
@@ -394,7 +398,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
 
         refreshSavedNetworks()
         let saved = cachedSavedSSIDs
-        isChecking = true
+        isScanning = true
+        lastNearbyScan = Date()
         lastStatus = "Scanning nearby networks…"
         rebuildMenu()
         checkQueue.async { [weak self] in
@@ -404,14 +409,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
                 self.appendLog("Passive scan found \(visible.count) visible saved/current networks")
                 DispatchQueue.main.async {
                     self.cachedVisibleNetworks = visible
-                    self.isChecking = false
+                    self.isScanning = false
                     self.lastStatus = "Nearby list refreshed (\(visible.count))"
                     self.rebuildMenu()
                 }
             } catch {
                 self.appendLog("Passive scan failed: \(error.localizedDescription)")
                 DispatchQueue.main.async {
-                    self.isChecking = false
+                    self.isScanning = false
                     self.lastStatus = "Wi-Fi scan failed: \(error.localizedDescription)"
                     self.rebuildMenu()
                 }
@@ -627,8 +632,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
         return item
     }
 
+    // Opening the menu is the refresh. macOS asks the delegate to rebuild the items
+    // just before display, and the nearby scan starts alongside it.
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        rebuildMenu()
+    }
+
+    func menuWillOpen(_ menu: NSMenu) {
+        guard Date().timeIntervalSince(lastNearbyScan) >= nearbyScanThrottle else { return }
+        // Let the menu finish opening before the scan starts rebuilding its items.
+        DispatchQueue.main.async { [weak self] in self?.refreshNearbyNetworks() }
+    }
+
     private func rebuildMenu() {
-        let menu = NSMenu()
+        menu.removeAllItems()
         let current = currentSSID()
         let currentName = current ?? "Not connected"
         let currentItem = NSMenuItem(title: "Current: \(currentName)", action: nil, keyEquivalent: "")
@@ -651,11 +668,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
         find.target = self
         find.isEnabled = !isChecking
         menu.addItem(find)
-        let refresh = NSMenuItem(title: "Refresh nearby networks",
-                                 action: #selector(refreshNearby), keyEquivalent: "")
-        refresh.target = self
-        refresh.isEnabled = !isChecking
-        menu.addItem(refresh)
         menu.addItem(.separator())
 
         var visibleSaved = cachedVisibleNetworks
@@ -733,7 +745,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
         let quit = NSMenuItem(title: "Quit Wi-Fi Picker", action: #selector(quitApp), keyEquivalent: "q")
         quit.target = self
         menu.addItem(quit)
-        statusItem.menu = menu
         statusItem.button?.toolTip = "Wi-Fi Picker — \(currentName)"
     }
 
@@ -753,14 +764,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, CLLocationManagerDeleg
     }
 
     @objc private func findBetter() { startCheck(reason: .manual) }
-
-    @objc private func refreshNearby() {
-        if locationManager.authorizationStatus == .notDetermined {
-            requestLocationAccessFromUser()
-        } else {
-            refreshNearbyNetworks()
-        }
-    }
 
     @objc private func requestLocationAccessFromUser() {
         NSApplication.shared.activate(ignoringOtherApps: true)

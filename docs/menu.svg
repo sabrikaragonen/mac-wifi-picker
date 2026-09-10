@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 360" width="420" height="360" role="img" aria-label="WiFi Picker menu bar dropdown showing the current network, priority controls and nearby known Wi-Fi networks">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 338" width="420" height="338" role="img" aria-label="WiFi Picker menu bar dropdown showing the current network, priority controls and nearby known Wi-Fi networks">
   <defs>
     <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#2c4a7c"/>
@@ -6,13 +6,13 @@
       <stop offset="1" stop-color="#6b4a82"/>
     </linearGradient>
     <clipPath id="round">
-      <rect x="0" y="0" width="420" height="360" rx="12"/>
+      <rect x="0" y="0" width="420" height="338" rx="12"/>
     </clipPath>
   </defs>
 
   <g clip-path="url(#round)">
-    <rect width="420" height="360" fill="url(#wall)"/>
-    <circle cx="70" cy="300" r="150" fill="#ffffff" opacity="0.06"/>
+    <rect width="420" height="338" fill="url(#wall)"/>
+    <circle cx="70" cy="290" r="150" fill="#ffffff" opacity="0.06"/>
 
     <!-- menu bar -->
     <rect width="420" height="26" fill="#101014" opacity="0.55"/>
@@ -41,8 +41,8 @@
     <text x="404" y="17" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#ffffff" opacity="0.9">9:41</text>
 
     <!-- dropdown panel -->
-    <rect x="56" y="32" width="352" height="316" rx="10" fill="#26262b" opacity="0.97"/>
-    <rect x="56" y="32" width="352" height="316" rx="10" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.14"/>
+    <rect x="56" y="32" width="352" height="294" rx="10" fill="#26262b" opacity="0.97"/>
+    <rect x="56" y="32" width="352" height="294" rx="10" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.14"/>
 
     <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12">
       <!-- status block (disabled items) -->
@@ -53,33 +53,32 @@
       <path d="M64 112 H400" stroke="#ffffff" opacity="0.12" stroke-width="1"/>
 
       <text x="70" y="133" fill="#f2f2f7">Find better Wi-Fi now</text>
-      <text x="70" y="155" fill="#f2f2f7">Refresh nearby networks</text>
 
-      <path d="M64 168 H400" stroke="#ffffff" opacity="0.12" stroke-width="1"/>
+      <path d="M64 146 H400" stroke="#ffffff" opacity="0.12" stroke-width="1"/>
 
-      <text x="70" y="189" fill="#8e8e96" font-size="11">Nearby Known Wi-Fi (4)</text>
+      <text x="70" y="167" fill="#8e8e96" font-size="11">Nearby Known Wi-Fi (4)</text>
 
       <!-- highlighted row -->
-      <rect x="62" y="196" width="340" height="22" rx="5" fill="#0a84ff"/>
-      <text x="70" y="211" fill="#ffffff">✓ HomeFiber_5G  ·  High<tspan fill="#ffffff" opacity="0.75">  (-48 dBm)</tspan></text>
-      <path d="M390 205 l5 3.5 l-5 3.5 z" fill="#ffffff"/>
+      <rect x="62" y="174" width="340" height="22" rx="5" fill="#0a84ff"/>
+      <text x="70" y="189" fill="#ffffff">✓ HomeFiber_5G  ·  High<tspan fill="#ffffff" opacity="0.75">  (-48 dBm)</tspan></text>
+      <path d="M390 183 l5 3.5 l-5 3.5 z" fill="#ffffff"/>
 
-      <text x="70" y="233" fill="#f2f2f7">HomeFiber  ·  Normal<tspan fill="#8e8e96">  (-61 dBm)</tspan></text>
+      <text x="70" y="211" fill="#f2f2f7">HomeFiber  ·  Normal<tspan fill="#8e8e96">  (-61 dBm)</tspan></text>
+      <path d="M390 205 l5 3.5 l-5 3.5 z" fill="#8e8e96"/>
+
+      <text x="70" y="233" fill="#f2f2f7">CoffeeBar Guest  ·  Normal<tspan fill="#8e8e96">  (-74 dBm)</tspan></text>
       <path d="M390 227 l5 3.5 l-5 3.5 z" fill="#8e8e96"/>
 
-      <text x="70" y="255" fill="#f2f2f7">CoffeeBar Guest  ·  Normal<tspan fill="#8e8e96">  (-74 dBm)</tspan></text>
+      <text x="70" y="255" fill="#f2f2f7">My iPhone  ·  Low (auto)<tspan fill="#8e8e96">  (-52 dBm)</tspan></text>
       <path d="M390 249 l5 3.5 l-5 3.5 z" fill="#8e8e96"/>
 
-      <text x="70" y="277" fill="#f2f2f7">My iPhone  ·  Low (auto)<tspan fill="#8e8e96">  (-52 dBm)</tspan></text>
-      <path d="M390 271 l5 3.5 l-5 3.5 z" fill="#8e8e96"/>
+      <path d="M64 268 H400" stroke="#ffffff" opacity="0.12" stroke-width="1"/>
 
-      <path d="M64 290 H400" stroke="#ffffff" opacity="0.12" stroke-width="1"/>
+      <text x="70" y="289" fill="#f2f2f7">Settings</text>
+      <path d="M390 283 l5 3.5 l-5 3.5 z" fill="#8e8e96"/>
 
-      <text x="70" y="311" fill="#f2f2f7">Settings</text>
-      <path d="M390 305 l5 3.5 l-5 3.5 z" fill="#8e8e96"/>
-
-      <text x="70" y="333" fill="#f2f2f7">Quit Wi-Fi Picker</text>
-      <text x="396" y="333" text-anchor="end" fill="#8e8e96">⌘Q</text>
+      <text x="70" y="311" fill="#f2f2f7">Quit Wi-Fi Picker</text>
+      <text x="396" y="311" text-anchor="end" fill="#8e8e96">⌘Q</text>
     </g>
   </g>
 </svg>
