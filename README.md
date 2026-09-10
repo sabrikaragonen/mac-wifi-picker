@@ -62,3 +62,7 @@ Log: `~/Library/Logs/wifi-picker.log`
 ```
 
 Your settings and log are left behind.
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE).
