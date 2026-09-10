@@ -21,9 +21,9 @@ Requires macOS 12+ and Apple's command line tools
 (`xcode-select --install` if `swiftc` is missing).
 
 ```bash
-git clone https://github.com/sabrikaragonen/wifi-picker.git
-cd wifi-picker
-./wifi-picker/install.sh
+git clone https://github.com/sabrikaragonen/mac-wifi-picker.git
+cd mac-wifi-picker
+./install.sh
 ```
 
 That builds `~/Applications/WiFi Picker.app`, launches it, and registers a login
@@ -58,7 +58,7 @@ Log: `~/Library/Logs/wifi-picker.log`
 ## Uninstall
 
 ```bash
-./wifi-picker/uninstall.sh
+./uninstall.sh
 ```
 
 Your settings and log are left behind.
