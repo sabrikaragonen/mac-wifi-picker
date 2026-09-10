@@ -2,6 +2,8 @@
 
 A macOS menu bar app that switches you to the best Wi-Fi you already know.
 
+![The WiFi Picker menu](docs/menu.svg)
+
 macOS keeps whichever network it joined first and stays there, even when a
 better one is in range. WiFi Picker reads the networks macOS has already saved,
 checks which of them are actually nearby, and moves you to the best one. You
